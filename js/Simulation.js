@@ -61,10 +61,10 @@ class Simulation {
     }
     init() {
         this.frame = 0;
-		this.car = new Car(this.width/2, this.height/2, 0, this.images.get('car').width);
+        this.car = new Car(this.width/2, this.height/2, 0, this.images.get('car').width);
     }
     nextFrame() {
-		this.car.nextStep(this.timedelta/1000);
+        this.car.nextStep(this.timedelta/1000);
     }
     renderFrame() {
         // Background
@@ -72,45 +72,45 @@ class Simulation {
         this.context.fillRect(0, 0, this.width, this.height);
         // Car
         let carimg = this.images.get('car');
-        this.context.translate(this.car.x, this.car.y);
+        this.context.translate(this.car.center.x, this.car.center.y);
         context.rotate(this.car.angle);
         this.context.drawImage(carimg.img, -carimg.width/2, -carimg.height/2, carimg.width, carimg.height);
         context.rotate(-this.car.angle);
-        this.context.translate(-this.car.x, -this.car.y);
+        this.context.translate(-this.car.center.x, -this.car.center.y);
     }
     onKeydown(evt) {
         switch(evt.keyCode) {
             case this.keybindings.left_forward:
-                this.car.controlLeft = 1;
+                this.car.vleft = this.car.vmax;
                 break;
             case this.keybindings.left_backward:
-                this.car.controlLeft = -1;
+                this.car.vleft = -this.car.vmax;
 				break;
             case this.keybindings.right_forward:
-                this.car.controlRight= 1;
+                this.car.vright = this.car.vmax;
                 break;
             case this.keybindings.right_backward:
-                this.car.controlRight = -1;
+                this.car.vright = -this.car.vmax;
                 break;
         }
     }
     onKeyup(evt) {
         switch(evt.keyCode) {
             case this.keybindings.left_forward:
-                if(this.car.controlLeft > 0)
-                    this.car.controlLeft = 0;
+                if(this.car.vleft > 0)
+                    this.car.vleft = 0
                 break;
             case this.keybindings.left_backward:
-                if(this.car.controlLeft < 0)
-                    this.car.controlLeft = 0;
+                if(this.car.vleft < 0)
+                    this.car.vleft = 0
 				break;
             case this.keybindings.right_forward:
-                if(this.car.controlRight > 0)
-                    this.car.controlRight= 0;
+                if(this.car.vright > 0)
+                    this.car.vright = 0
                 break;
             case this.keybindings.right_backward:
-                if(this.car.controlRight < 0)
-                    this.car.controlRight = 0;
+                if(this.car.vright < 0)
+                    this.car.vright = 0
                 break;
         }
     }
