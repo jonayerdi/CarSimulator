@@ -25,6 +25,14 @@ class Car {
         this.center = new Position(x, y);
         this.angle = angle;
         this.width = width;
+        // Wheels
+        this.left = new Position(NaN, NaN);
+        this.right = new Position(NaN, NaN);
+        this.left.x = this.center.x - width/2 * Math.cos(this.angle);
+        this.left.y = this.center.y - width/2 * Math.sin(this.angle);
+        this.right.x = this.center.x + width/2 * Math.cos(this.angle);
+        this.right.y = this.center.y + width/2 * Math.sin(this.angle);
+        // Speed
         this.vleft = 0;
         this.vright = 0;
         // Parameters
