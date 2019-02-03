@@ -19,7 +19,7 @@ class Simulation {
         this.keydownFunction = (evt) => this.onKeydown(evt);
         this.context.scale(width/this.width, height/this.height);
         // Parameters
-        this.timedelta = 50;
+        this.timedelta = 10;
     }
     load() {
         return new Promise((resolve, reject) => {
@@ -61,7 +61,7 @@ class Simulation {
     }
     init() {
         this.frame = 0;
-        this.car = new Car(this.width/2, this.height/2, 0, this.images.get('car').width);
+        this.car = new Car(this.width/2, this.height/2, Math.PI * 1.60, this.images.get('car').width);
     }
     nextFrame() {
         this.car.nextStep(this.timedelta/1000);

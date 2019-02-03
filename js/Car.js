@@ -9,14 +9,17 @@ class Position {
         return Math.atan2(diffY, diffX);
     }
     rotateAround(center, perimeter, direction) {
-        /* direction 1 = clockwise; -1 = counterclockwise */
+        // direction 1 = clockwise; -1 = counterclockwise
         let diffX = this.x - center.x;
         let diffY = this.y - center.y;
         let radius = Math.sqrt(diffX*diffX + diffY*diffY);
-        let angle = this.angleRelative(center) + direction * (perimeter / radius);
-        if(angle != NaN && angle != Infinity && angle != -Infinity) {
-            this.x = center.x + radius * Math.cos(angle);
-            this.y = center.y + radius * Math.sin(angle);
+        if (radius != 0) {
+            let diffAngle = direction * (perimeter / radius);
+            let angle = this.angleRelative(center) + diffAngle;
+            if(angle != NaN && angle != Infinity && angle != -Infinity) {
+                this.x = center.x + radius * Math.cos(angle);
+                this.y = center.y + radius * Math.sin(angle);
+            }
         }
     }
 }
@@ -28,17 +31,46 @@ class Car {
         // Wheels
         this.left = new Position(NaN, NaN);
         this.right = new Position(NaN, NaN);
-        this.left.x = this.center.x - width/2 * Math.cos(this.angle);
-        this.left.y = this.center.y - width/2 * Math.sin(this.angle);
-        this.right.x = this.center.x + width/2 * Math.cos(this.angle);
-        this.right.y = this.center.y + width/2 * Math.sin(this.angle);
+        this.updateWheelsFromCenter();
         // Speed
         this.vleft = 0;
         this.vright = 0;
         // Parameters
-        this.vmax = 300;
+        this.vmax = 200;
+    }
+    updateWheelsFromCenter() {
+        this.left.x = this.center.x - this.width/2 * Math.cos(this.angle);
+        this.left.y = this.center.y - this.width/2 * Math.sin(this.angle);
+        this.right.x = this.center.x + this.width/2 * Math.cos(this.angle);
+        this.right.y = this.center.y + this.width/2 * Math.sin(this.angle);
+    }
+    updateCenterFromWheels() {
+        this.center.x = (this.left.x + this.right.x) / 2;
+        this.center.y = (this.left.y + this.right.y) / 2;
+    }
+    updateAngleFromWheels() {
+        this.right.angleRelative(this.left);
     }
     nextStep(timedelta) {
-        
+        let leftPerimeter = this.vleft * timedelta;
+        let rightPerimeter = this.vright * timedelta;
+        // No rotation
+        if (leftPerimeter == rightPerimeter) {
+            this.center.x += leftPerimeter * Math.sin(this.angle);
+            this.center.y -= leftPerimeter * Math.cos(this.angle);
+            this.updateWheelsFromCenter();
+            return;
+        }
+        // With positive speed, left wheel rotates clockwise, right wheel rotates counterclockwise
+        let leftDirection = this.vleft == 0 ? 0 : (this.vleft > 0 ? 1 : -1)
+        let rightDirection = this.vright == 0 ? 0 : (this.vright > 0 ? -1 : 1)
+        // Wheels rotate in same of different directions
+        if (leftDirection == rightDirection) {
+            // Both wheels clockwise or conterclockwise, rotation center between the wheels
+
+        } else {
+            // Both wheels moving forwards or backwards, rotation center left or right of the car
+
+        }
     }
 }
