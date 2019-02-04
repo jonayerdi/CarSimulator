@@ -49,6 +49,8 @@ class Simulation {
                     loadedImages.forEach((image) => {
                         this.images.get(image.name).img = image.img;
                     });
+                    // Init simulation
+                    this.init();
                     resolve();
                 })
                 .catch((reason) => reject(reason));
@@ -56,7 +58,6 @@ class Simulation {
         });
     }
     start() {
-        this.init();
         if(this.leftControl && this.rightControl) {
             this.leftControl.oninput = () => this.onLeftControlUpdate();
             this.rightControl.oninput = () => this.onRightControlUpdate();
@@ -65,6 +66,16 @@ class Simulation {
 		    document.addEventListener('keydown', this.keydownFunction);
         }
 		this.intervalID = setInterval(() => {this.nextFrame(); this.renderFrame();}, this.timedelta);
+    }
+    stop() {
+        if(this.leftControl && this.rightControl) {
+            this.leftControl.oninput = null;
+            this.rightControl.oninput = null;
+        } else {
+            document.removeEventListener('keyup', this.keyupFunction);
+            document.removeEventListener('keydown', this.keydownFunction);
+        }
+        clearInterval(this.intervalID);
     }
     init() {
         this.frame = 0;
