@@ -61,7 +61,7 @@ class Simulation {
     }
     init() {
         this.frame = 0;
-        this.car = new Car(this.width/2, this.height/2, Math.PI * 1.60, this.images.get('car').width);
+        this.car = new Car(this.width/2, this.height/2, 0, this.images.get('car').width);
     }
     nextFrame() {
         this.car.nextStep(this.timedelta/1000);
@@ -76,8 +76,8 @@ class Simulation {
         context.rotate(this.car.angle);
         this.context.drawImage(carimg.img, -carimg.width/2, -carimg.height/2, carimg.width, carimg.height);
         context.rotate(-this.car.angle);
-        // Car center + wheels
         this.context.translate(-this.car.center.x, -this.car.center.y);
+        // Car center + wheels
         this.context.fillStyle = 'white';
         this.context.fillRect(this.car.left.x - 3, this.car.left.y - 3, 6, 6);
         this.context.fillStyle = 'red';

@@ -83,7 +83,23 @@ class Car {
                 rotationCenter = this.right;
             } else {
                 // Rotation center somewhere left or right of the car
-
+                if(leftPerimeterAbs > rightPerimeterAbs) {
+                    // Left wheel is faster
+                    let rotationDistance = this.width / (leftPerimeterAbs/rightPerimeterAbs - 1);
+                    let rotationCenterX = this.right.x + rotationDistance * Math.cos(this.angle);
+                    let rotationCenterY = this.right.y + rotationDistance * Math.sin(this.angle);
+                    rotationCenter = new Position(rotationCenterX, rotationCenterY);
+                    // Left wheel direction is dominant
+                    rightDirection = leftDirection;
+                } else {
+                    // Right wheel is faster
+                    let rotationDistance = this.width / (rightPerimeterAbs/leftPerimeterAbs - 1);
+                    let rotationCenterX = this.left.x - rotationDistance * Math.cos(this.angle);
+                    let rotationCenterY = this.left.y - rotationDistance * Math.sin(this.angle);
+                    rotationCenter = new Position(rotationCenterX, rotationCenterY);
+                    // Right wheel direction is dominant
+                    leftDirection = rightDirection;
+                }
             }
         }
         this.left.rotateAround(rotationCenter, leftPerimeterAbs, leftDirection);
