@@ -1,5 +1,5 @@
 class Simulation {
-    constructor(context, width, height) {
+    constructor(context, width, height, leftControl, rightControl) {
         // Configuration
         this.width = 1000;
         this.height = 1000;
@@ -9,6 +9,8 @@ class Simulation {
             right_forward: 75, // k
             right_backward: 77, // m
         }
+        this.leftControl = document.getElementById(leftControl);
+        this.rightControl = document.getElementById(rightControl);
         this.imagesRoot = 'img/';
         this.imageFiles = [
             {name: 'car', src: 'car.png', width: 80, height: 50},
@@ -55,8 +57,13 @@ class Simulation {
     }
     start() {
         this.init();
-        document.addEventListener('keyup', this.keyupFunction);
-		document.addEventListener('keydown', this.keydownFunction);
+        if(this.leftControl && this.rightControl) {
+            this.leftControl.oninput = () => this.onLeftControlUpdate();
+            this.rightControl.oninput = () => this.onRightControlUpdate();
+        } else {
+            document.addEventListener('keyup', this.keyupFunction);
+		    document.addEventListener('keydown', this.keydownFunction);
+        }
 		this.intervalID = setInterval(() => {this.nextFrame(); this.renderFrame();}, this.timedelta);
     }
     init() {
@@ -84,6 +91,12 @@ class Simulation {
         this.context.fillRect(this.car.center.x - 3, this.car.center.y - 3, 6, 6);
         this.context.fillStyle = 'yellow';
         this.context.fillRect(this.car.right.x - 3, this.car.right.y - 3, 6, 6);
+    }
+    onLeftControlUpdate() {
+        this.car.vleft = this.car.vmax * this.leftControl.value / 100;
+    }
+    onRightControlUpdate() {
+        this.car.vright = this.car.vmax * this.rightControl.value / 100;
     }
     onKeydown(evt) {
         switch(evt.keyCode) {

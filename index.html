@@ -6,12 +6,27 @@
             window.onload = function() {
                 canvas = document.getElementById("gc");
                 context = canvas.getContext("2d");
-                sim = new Simulation(context, canvas.width, canvas.height);
+                sim = new Simulation(context, canvas.width, canvas.height, "leftSlider", "rightSlider");
                 sim.load().then(() => sim.start());
             }
         </script>
     </head>
     <body>
-        <canvas id="gc" width="600" height="600" tabindex="1"></canvas>
+        <div>
+            <canvas id="gc" width="600" height="600" tabindex="1"></canvas>
+            <div class="slidecontainer">
+                <input type="range" min="-100" max="100" value="0" class="slider" id="leftSlider">
+                <input type="range" min="-100" max="100" value="0" class="slider" id="rightSlider">
+            </div>
+        </div>
+        <style>
+            .slidecontainer {
+                display:inline-block;
+            }
+            .slider {
+                position: relative;
+                transform: rotate(270deg);
+            }
+        </style>
     </body>
 </html>
